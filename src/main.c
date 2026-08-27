@@ -3,6 +3,7 @@
 #include <string.h>
 #include <math.h>
 #include <string.h>
+#include <ctype.h>
 
 char* append_char_dynamic(char* str, char ch) {
   int len = strlen(str);
@@ -11,6 +12,25 @@ char* append_char_dynamic(char* str, char ch) {
   new_str[len] = ch;
   new_str[len + 1] = '\0';
   return new_str;
+}
+
+char* append_str_dynamic(char* str, char* ch) {
+  size_t lenStr = strlen(str);
+  size_t lenCh = strlen(ch);
+
+  char* new_str = realloc(str, lenStr + lenCh + 1);
+  if (!new_str) return str;
+
+  memcpy(new_str + lenStr, ch, lenCh + 1);
+  return new_str;
+}
+
+char* toLowerCase(char *str) {
+  for (int i = 0; str[i]; i++) {
+    str[i] = tolower(str[i]);
+  }
+
+  return str;
 }
 
 int main (int argc, char *argv[]) {
@@ -28,16 +48,34 @@ int main (int argc, char *argv[]) {
 
   char *token = strtok(message, delimiters);
   int wordCount = 0;
+  int charCount = 0;
   int priorCharIsN = 0;
+  int r = 0;
   
   while (token != NULL) {
+    // UwU -> UwU~
+    if (strcmp(toLowerCase(token), "uwu") == 0) {
+      uwuifyMessage = append_str_dynamic(uwuifyMessage, "UwU~ ");
+      token = strtok(NULL, delimiters);
+      continue;
+    }
+
+    // I -> i
+    if (strcmp(token, "I") == 0) {
+      uwuifyMessage = append_str_dynamic(uwuifyMessage, "i ");
+      token = strtok(NULL, delimiters);
+      continue;
+    }
+
     for (char *p = token; *p != '\0'; p++) {
       char appendChar;
 
+      /*
+      l, r  -> w
+      L, R  -> W
+      na    -> nya
+      */
       switch (*p) {
-        case 'I':
-          appendChar = 'i';
-          break;
         case 'l':
         case 'r':
           appendChar = 'w';
@@ -68,12 +106,20 @@ int main (int argc, char *argv[]) {
           priorCharIsN = 0;
           break;
       }
+      
+      r = rand() % 3;
+      if (charCount == 0 && r == 0) {
+        char tmp[3] = { appendChar, '-', '\0' };
+        uwuifyMessage = append_str_dynamic(uwuifyMessage, tmp);
+      }
 
       uwuifyMessage = append_char_dynamic(uwuifyMessage, appendChar);
+      charCount++;
     }
 
     printf("| Word %d: %s\n", ++wordCount, token);
     token = strtok(NULL, delimiters);
+    charCount = 0;
 
     uwuifyMessage = append_char_dynamic(uwuifyMessage, ' ');
   }

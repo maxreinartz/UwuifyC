@@ -1,6 +1,6 @@
 # Uwuify C
 
-This is an error window that bounces around your screen.
+A simple C program to uwuify text!
 
 ## License
 
