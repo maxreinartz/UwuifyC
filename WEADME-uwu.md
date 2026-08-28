@@ -1,7 +1,7 @@
-# Uwuify C
+# Uwuify C-C
 
-a simpwe c-c pwogwam to uwuify t-text! 
+A simpwe C-C pwogwam to uwuify t-text! :3
 
 ## Wicense
 
-this is w-wicensed undew a-a m-mit w-wicense. c-check the w-wicense f-fiwe fow m-mowe.
+This is w-wicensed undew a-a M-MIT W-Wicense. rawr Check the WICENSE fiwe fow m-mowe. XD

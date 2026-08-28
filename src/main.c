@@ -4,6 +4,7 @@
 #include <math.h>
 #include <string.h>
 #include <ctype.h>
+#include <time.h>
 
 char* append_char_dynamic(char* str, char ch) {
   int len = strlen(str);
@@ -33,8 +34,43 @@ char* toLowerCase(char *str) {
   return str;
 }
 
+char* toLowerCopy(const char *str) {
+  char *copy = strdup(str);
+  for (int i = 0; copy[i]; i++)
+    copy[i] = tolower(copy[i]);
+  return copy;
+}
+
+char* getRandomFace(void) {
+    const char* faces[] = {
+      " rawr x3",
+      " OwO",
+      " UwU",
+      " o.O",
+      " -.-",
+      " >w<",
+      " :3",
+      " :3",
+      " XD",
+      " nyaa~~",
+      " mya",
+      " >_<",
+      " rawr",
+      " ^^",
+    };
+
+    int count = sizeof(faces) / sizeof(faces[0]);
+    int r = rand() % count;
+
+    return (char*)faces[r];
+}
+
+
 int main (int argc, char *argv[]) {
   printf("Uwuify C\n");
+
+  // srand(time(NULL));
+  srand(1);
 
   if (argc != 2) {
     printf("Invalid args\n");
@@ -54,21 +90,26 @@ int main (int argc, char *argv[]) {
   
   while (token != NULL) {
     // UwU -> UwU~
-    if (strcmp(toLowerCase(token), "uwu") == 0) {
+    char *lower = toLowerCopy(token);
+
+    if (strcmp(lower, "uwu") == 0) {
       uwuifyMessage = append_str_dynamic(uwuifyMessage, "UwU~ ");
+      free(lower);
       token = strtok(NULL, delimiters);
       continue;
     }
 
     // I -> i
-    if (strcmp(token, "I") == 0) {
+    if (strcmp(lower, "I") == 0) {
       uwuifyMessage = append_str_dynamic(uwuifyMessage, "i ");
+      free(lower);
       token = strtok(NULL, delimiters);
       continue;
     }
 
     for (char *p = token; *p != '\0'; p++) {
       char appendChar;
+      int appendFace = 0;
 
       /*
       l, r  -> w
@@ -76,6 +117,12 @@ int main (int argc, char *argv[]) {
       na    -> nya
       */
       switch (*p) {
+        case '.':
+        case '!':
+        case '?':
+          appendChar = *p;
+          appendFace = 1;
+          break;
         case 'l':
         case 'r':
           appendChar = 'w';
@@ -113,9 +160,16 @@ int main (int argc, char *argv[]) {
         uwuifyMessage = append_str_dynamic(uwuifyMessage, tmp);
       }
 
-      uwuifyMessage = append_char_dynamic(uwuifyMessage, appendChar);
+      if (appendChar != ' ')
+        uwuifyMessage = append_char_dynamic(uwuifyMessage, appendChar);
+      
+      if (appendFace == 1)
+        uwuifyMessage = append_str_dynamic(uwuifyMessage, getRandomFace());
+      
       charCount++;
     }
+
+    free(lower);
 
     printf("| Word %d: %s\n", ++wordCount, token);
     token = strtok(NULL, delimiters);
