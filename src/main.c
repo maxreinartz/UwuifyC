@@ -41,44 +41,41 @@ char* toLowerCopy(const char *str) {
   return copy;
 }
 
-char* getRandomFace(void) {
-    const char* faces[] = {
-      " rawr x3",
-      " OwO",
-      " UwU",
-      " o.O",
-      " -.-",
-      " >w<",
-      " :3",
-      " :3",
-      " XD",
-      " nyaa~~",
-      " mya",
-      " >_<",
-      " rawr",
-      " ^^",
-    };
-
-    int count = sizeof(faces) / sizeof(faces[0]);
-    int r = rand() % count;
-
-    return (char*)faces[r];
+int exists(const char *fname) {
+  FILE *file;
+  if ((file = fopen(fname, "r")))
+  {
+    fclose(file);
+    return 1;
+  }
+  return 0;
 }
 
+char* getRandomFace(void) {
+  const char* faces[] = {
+    " rawr x3",
+    " OwO",
+    " UwU",
+    " o.O",
+    " -.-",
+    " >w<",
+    " :3",
+    " :3",
+    " XD",
+    " nyaa~~",
+    " mya",
+    " >_<",
+    " rawr",
+    " ^^",
+  };
 
-int main (int argc, char *argv[]) {
-  printf("Uwuify C\n");
+  int count = sizeof(faces) / sizeof(faces[0]);
+  int r = rand() % count;
 
-  // srand(time(NULL));
-  srand(1);
+  return (char*)faces[r];
+}
 
-  if (argc != 2) {
-    printf("Invalid args\n");
-    printf("\tuwuify \"message\"");
-    return 0;
-  }
-
-  char *message = argv[1];
+char* uwuifyString(char *message) {
   char *uwuifyMessage = strdup("");
   const char *delimiters = " ";
 
@@ -178,9 +175,64 @@ int main (int argc, char *argv[]) {
     uwuifyMessage = append_char_dynamic(uwuifyMessage, ' ');
   }
 
+  return uwuifyMessage;
+}
+
+int main (int argc, char *argv[]) {
+  printf("Uwuify C\n");
+
+  // srand(time(NULL));
+  srand(1);
+
+  if (argc != 2) {
+    printf("Invalid args\n");
+    printf("\tuwuify \"message\"");
+    return 0;
+  }
+
+  char *uwuifyMessage;
+
+  if(exists(argv[1])) {
+    FILE *file = fopen(argv[1], "r");
+    char buffer[256];
+
+    if (file == NULL) {
+      perror("Unable to open file!");
+      return 1;
+    }
+
+    char outname[512];
+    snprintf(outname, sizeof(outname), "%s.uwu", argv[1]);
+
+    FILE *uwuFile = fopen(outname, "w");
+
+    while (fgets(buffer, sizeof(buffer), file)) {
+      buffer[strcspn(buffer, "\n")] = '\0';
+
+      char *tmp = strdup(buffer);
+      char *uwu = uwuifyString(tmp);
+
+      printf("%s\n", uwu);
+      fputs(uwu, uwuFile);
+      fputc('\n', uwuFile);
+
+      free(tmp);
+      free(uwu);
+    }
+
+    uwuifyMessage = "Done!";
+
+    fclose(file);
+  } else {
+    char *message = argv[1];
+    uwuifyMessage = uwuifyString(message);
+  }
+
   printf("Uwuify: %s", uwuifyMessage);
 
-  free(uwuifyMessage);
+  if (!exists(argv[1])) {
+    free(uwuifyMessage);
+  }
 
   return 0;
 }

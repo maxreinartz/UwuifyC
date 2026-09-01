@@ -1,6 +1,7 @@
 # Uwuify C
 
-A simple C program to uwuify text!
+A simple C program to uwuify text!  
+Read the [uwuified readme](https://github.com/maxreinartz/UwuifyC/README.md.uwu)!
 
 ## License
 
