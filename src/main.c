@@ -186,7 +186,7 @@ int main (int argc, char *argv[]) {
 
   if (argc != 2) {
     printf("Invalid args\n");
-    printf("\tuwuify \"message\"");
+    printf("\tuwuify [\"message\" or <filepath>]");
     return 0;
   }
 
