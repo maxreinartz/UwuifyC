@@ -6,6 +6,8 @@
 #include <ctype.h>
 #include <time.h>
 
+int totalWords = 0;
+
 char* append_char_dynamic(char* str, char ch) {
   int len = strlen(str);
   char* new_str = realloc(str, len + 2);
@@ -151,8 +153,12 @@ char* uwuifyString(char *message) {
           break;
       }
       
+      int isAsciiLetter = 
+        (appendChar >= 'A' && appendChar <= 'Z') ||
+        (appendChar >= 'a' && appendChar <= 'z');
+
       r = rand() % 3;
-      if (charCount == 0 && r == 0) {
+      if (charCount == 0 && r == 0 && isAsciiLetter) {
         char tmp[3] = { appendChar, '-', '\0' };
         uwuifyMessage = append_str_dynamic(uwuifyMessage, tmp);
       }
@@ -171,6 +177,8 @@ char* uwuifyString(char *message) {
     printf("| Word %d: %s\n", ++wordCount, token);
     token = strtok(NULL, delimiters);
     charCount = 0;
+    priorCharIsN = 0;
+    totalWords++;
 
     uwuifyMessage = append_char_dynamic(uwuifyMessage, ' ');
   }
@@ -179,6 +187,11 @@ char* uwuifyString(char *message) {
 }
 
 int main (int argc, char *argv[]) {
+  struct timeval t1, t2;
+  double elapsedTime;
+
+  mingw_gettimeofday(&t1, NULL);
+
   printf("Uwuify C\n");
 
   // srand(time(NULL));
@@ -194,7 +207,7 @@ int main (int argc, char *argv[]) {
 
   if(exists(argv[1])) {
     FILE *file = fopen(argv[1], "r");
-    char buffer[256];
+    char buffer[512];
 
     if (file == NULL) {
       perror("Unable to open file!");
@@ -233,6 +246,13 @@ int main (int argc, char *argv[]) {
   if (!exists(argv[1])) {
     free(uwuifyMessage);
   }
+
+  mingw_gettimeofday(&t2, NULL);
+
+  elapsedTime = (t2.tv_sec - t1.tv_sec) * 1000.0;
+  elapsedTime += (t2.tv_usec - t1.tv_usec) / 1000.0;
+
+  printf("\n\n-----------------\n      Stats\n-----------------\nTime: %.2f ms\nTotal Words: %i", elapsedTime, totalWords);
 
   return 0;
 }
