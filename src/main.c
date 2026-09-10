@@ -96,6 +96,7 @@ char* uwuifyString(char *message) {
       uwuifyMessage = append_str_dynamic(uwuifyMessage, "UwU~ ");
       free(lower);
       token = strtok(NULL, delimiters);
+      totalWords++;
       continue;
     }
 
@@ -104,6 +105,7 @@ char* uwuifyString(char *message) {
       uwuifyMessage = append_str_dynamic(uwuifyMessage, "i ");
       free(lower);
       token = strtok(NULL, delimiters);
+      totalWords++;
       continue;
     }
 
@@ -226,7 +228,7 @@ int main (int argc, char *argv[]) {
       char *tmp = strdup(buffer);
       char *uwu = uwuifyString(tmp);
 
-      printf("%s\n", uwu);
+      // printf("%s\n", uwu);
       fputs(uwu, uwuFile);
       fputc('\n', uwuFile);
 
