@@ -82,7 +82,7 @@ char* uwuifyString(char *message) {
   const char *delimiters = " ";
 
   char *token = strtok(message, delimiters);
-  int wordCount = 0;
+  // int wordCount = 0;
   int charCount = 0;
   int priorCharIsN = 0;
   int r = 0;
@@ -90,6 +90,7 @@ char* uwuifyString(char *message) {
   while (token != NULL) {
     // UwU -> UwU~
     char *lower = toLowerCopy(token);
+    int processChar = 0;
 
     if (strcmp(lower, "uwu") == 0) {
       uwuifyMessage = append_str_dynamic(uwuifyMessage, "UwU~ ");
@@ -99,7 +100,7 @@ char* uwuifyString(char *message) {
     }
 
     // I -> i
-    if (strcmp(lower, "I") == 0) {
+    if (strcmp(token, "I") == 0) {
       uwuifyMessage = append_str_dynamic(uwuifyMessage, "i ");
       free(lower);
       token = strtok(NULL, delimiters);
@@ -174,7 +175,7 @@ char* uwuifyString(char *message) {
 
     free(lower);
 
-    printf("| Word %d: %s\n", ++wordCount, token);
+    // printf("| Word %d: %s\n", ++wordCount, token);
     token = strtok(NULL, delimiters);
     charCount = 0;
     priorCharIsN = 0;
@@ -241,18 +242,23 @@ int main (int argc, char *argv[]) {
     uwuifyMessage = uwuifyString(message);
   }
 
-  printf("Uwuify: %s", uwuifyMessage);
-
-  if (!exists(argv[1])) {
-    free(uwuifyMessage);
-  }
-
   mingw_gettimeofday(&t2, NULL);
 
   elapsedTime = (t2.tv_sec - t1.tv_sec) * 1000.0;
   elapsedTime += (t2.tv_usec - t1.tv_usec) / 1000.0;
 
-  printf("\n\n-----------------\n      Stats\n-----------------\nTime: %.2f ms\nTotal Words: %i", elapsedTime, totalWords);
+  printf(
+    "\n-----------------\n      Stats\n-----------------\nTime: %.2f ms\nTotal Words: %i",
+    elapsedTime, totalWords
+  );
+
+  
+
+  printf("\n\n-----------------\n      Uwuify\n-----------------\n%s", uwuifyMessage);
+
+  if (!exists(argv[1])) {
+    free(uwuifyMessage);
+  }
 
   return 0;
 }
