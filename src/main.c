@@ -4,7 +4,7 @@
 #include <math.h>
 #include <string.h>
 #include <ctype.h>
-#include <time.h>
+#include <sys/time.h>
 
 int totalWords = 0;
 
@@ -193,7 +193,7 @@ int main (int argc, char *argv[]) {
   struct timeval t1, t2;
   double elapsedTime;
 
-  mingw_gettimeofday(&t1, NULL);
+  gettimeofday(&t1, NULL);
 
   printf("Uwuify C\n");
 
@@ -244,7 +244,7 @@ int main (int argc, char *argv[]) {
     uwuifyMessage = uwuifyString(message);
   }
 
-  mingw_gettimeofday(&t2, NULL);
+  gettimeofday(&t2, NULL);
 
   elapsedTime = (t2.tv_sec - t1.tv_sec) * 1000.0;
   elapsedTime += (t2.tv_usec - t1.tv_usec) / 1000.0;
@@ -256,7 +256,7 @@ int main (int argc, char *argv[]) {
 
   
 
-  printf("\n\n-----------------\n      Uwuify\n-----------------\n%s", uwuifyMessage);
+  printf("\n\n-----------------\n      Uwuify\n-----------------\n%s\n", uwuifyMessage);
 
   if (!exists(argv[1])) {
     free(uwuifyMessage);

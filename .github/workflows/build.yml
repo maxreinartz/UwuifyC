@@ -1,0 +1,37 @@
+name: Build
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    name: Build (${{ matrix.name }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - name: Linux
+            os: ubuntu-latest
+            make: make
+            executable: output/uwuify
+          - name: Windows
+            os: windows-latest
+            make: mingw32-make
+            executable: output/uwuify.exe
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Build
+        run: ${{ matrix.make }} clean all
+
+      - name: Smoke test
+        run: ./${{ matrix.executable }} "It's not like I like you or anything!"
+
+      - name: Upload executable
+        uses: actions/upload-artifact@v4
+        with:
+          name: uwuify-${{ matrix.name }}
+          path: ${{ matrix.executable }}

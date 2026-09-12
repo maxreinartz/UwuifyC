@@ -7,24 +7,38 @@ OBJDIR = obj
 BINDIR = output
 SOURCES := $(wildcard $(SRCDIR)/*.c)
 OBJECTS := $(SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
-TARGET := $(BINDIR)/uwuify.exe
+
+ifeq ($(OS),Windows_NT)
+EXEEXT = .exe
+define MKDIR_P
+if not exist $(1) mkdir $(1)
+endef
+RM = rmdir /S /Q
+else
+EXEEXT =
+define MKDIR_P
+mkdir -p $(1)
+endef
+RM = rm -rf
+endif
+
+TARGET := $(BINDIR)/uwuify$(EXEEXT)
 
 all: $(TARGET)
 
 $(TARGET): $(OBJECTS)
-	if not exist $(BINDIR) mkdir $(BINDIR)
+	$(call MKDIR_P,$(BINDIR))
 	$(CC) $(LDFLAGS) $^ -o $@ $(LIBS)
 	strip $@
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
-	if not exist $(OBJDIR) mkdir $(OBJDIR)
+	$(call MKDIR_P,$(OBJDIR))
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	if exist $(OBJDIR) rmdir /S /Q $(OBJDIR)
-	if exist $(BINDIR) rmdir /S /Q $(BINDIR)
+	$(RM) $(OBJDIR) $(BINDIR)
 
 clean_obj:
-	if exist $(OBJDIR) rmdir /S /Q $(OBJDIR)
+	$(RM) $(OBJDIR)
 
 .PHONY: all clean clean_obj
