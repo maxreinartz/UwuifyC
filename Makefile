@@ -10,29 +10,24 @@ OBJECTS := $(SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 
 ifeq ($(OS),Windows_NT)
 EXEEXT = .exe
-define MKDIR_P
-if not exist $(1) mkdir $(1)
-endef
-RM = rmdir /S /Q
 else
 EXEEXT =
-define MKDIR_P
-mkdir -p $(1)
-endef
-RM = rm -rf
 endif
+
+MKDIR_P = mkdir -p
+RM = rm -rf
 
 TARGET := $(BINDIR)/uwuify$(EXEEXT)
 
 all: $(TARGET)
 
 $(TARGET): $(OBJECTS)
-	$(call MKDIR_P,$(BINDIR))
+	$(MKDIR_P) $(BINDIR)
 	$(CC) $(LDFLAGS) $^ -o $@ $(LIBS)
 	strip $@
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
-	$(call MKDIR_P,$(OBJDIR))
+	$(MKDIR_P) $(OBJDIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
