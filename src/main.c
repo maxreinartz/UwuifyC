@@ -72,6 +72,34 @@ static inline void appendString(Output *output, const char *string) {
   }
 }
 
+static int readLine(FILE *file, char **buffer, size_t *capacity) {
+  size_t length = 0;
+
+  if (!*buffer) {
+    *capacity = 512;
+    *buffer = malloc(*capacity);
+    if (!*buffer)
+      return -1;
+  }
+
+  for (;;) {
+    if (!fgets(*buffer + length, (int)(*capacity - length), file))
+      return length ? 1 : 0;
+
+    length += strlen(*buffer + length);
+    if (length == 0 || (*buffer)[length - 1] == '\n')
+      return 1;
+
+    size_t newCapacity = *capacity * 2;
+    char *newBuffer = realloc(*buffer, newCapacity);
+    if (!newBuffer)
+      return -1;
+
+    *buffer = newBuffer;
+    *capacity = newCapacity;
+  }
+}
+
 const char *findReplacement(const char *token, const char **suffix) {
   for (size_t i = 0; i < replacementCount; i++) {
     const char *word = replacements[i].word;
@@ -255,7 +283,7 @@ int main(int argc, char *argv[]) {
     FILE *uwuFile = fopen(outname, "w");
     setvbuf(uwuFile, NULL, _IOFBF, 64 * 1024);
 
-    while (getline(&buffer, &bufferCapacity, file) != -1) {
+    while (readLine(file, &buffer, &bufferCapacity) == 1) {
       buffer[strcspn(buffer, "\n")] = '\0';
 
       char *uwu = uwuifyString(buffer);
