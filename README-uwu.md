@@ -1,8 +1,8 @@
 # Uwuify C-C 
 
-A-A simpwe C p-pwogwam t-to uwuify t-text! OwO  
-Wead t-the [uwuified weadme](https://github.com/maxreinartz/UwuifyC/blob/main/README-uwu.md)! >w< 
+A simpwe C pwogwam t-to uwuify t-text! >w<  
+Wead t-the [uwuified w-weadme](https://github.com/maxreinartz/UwuifyC/blob/main/README-uwu.md)! :3 
 
-## W-Wicense 
+## Wicense 
 
-This i-is wicensed u-undew a M-MIT Wicense. rawr Check t-the WICENSE fiwe fow mowe. >w< 
+This is w-wicensed undew a-a MIT Wicense. -.- Check t-the W-WICENSE f-fiwe fow mowe. UwU

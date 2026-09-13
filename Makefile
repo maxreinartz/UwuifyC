@@ -1,6 +1,6 @@
 CC = gcc
-CFLAGS = -Iinclude -Os -s
-LDFLAGS = -s
+CFLAGS = -Iinclude -O2 -flto
+LDFLAGS = -s -flto
 LIBS =
 SRCDIR = src
 OBJDIR = obj
