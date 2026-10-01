@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 #include <sys/time.h>
 
 int totalWords = 0;
@@ -256,10 +257,9 @@ char *uwuifyString(char *message) {
 }
 
 int main(int argc, char *argv[]) {
-  struct timeval t1, t2;
-  double elapsedTime;
+  struct timespec start, end;
 
-  gettimeofday(&t1, NULL);
+  clock_gettime(CLOCK_MONOTONIC, &start);
 
   printf("Uwuify C\n");
 
@@ -304,14 +304,18 @@ int main(int argc, char *argv[]) {
     uwuifyMessage = uwuifyString(message);
   }
 
-  gettimeofday(&t2, NULL);
+  clock_gettime(CLOCK_MONOTONIC, &end);
 
-  elapsedTime = (t2.tv_sec - t1.tv_sec) * 1000.0;
-  elapsedTime += (t2.tv_usec - t1.tv_usec) / 1000.0;
+  uint64_t elapsed_ms = (end.tv_sec - start.tv_sec) * 1000 +
+                        (end.tv_nsec - start.tv_nsec) / 1000000;
 
-  printf("\n-----------------\n      Stats\n-----------------\nTime: %.2f "
-         "ms\nTotal Words: %i",
-         elapsedTime, totalWords);
+  int minutes = (int)(elapsed_ms / 60000);
+  int seconds = (int)((elapsed_ms - minutes * 60000) / 1000);
+  int millis = (int)(elapsed_ms - minutes * 60000 - seconds * 1000);
+
+  printf("\n-----------------\n      Stats\n-----------------\n"
+         "Time: %02d:%02d.%03d\nTotal Words: %i",
+         minutes, seconds, millis, totalWords);
 
   printf("\n\n-----------------\n      Uwuify\n-----------------\n%s\n",
          uwuifyMessage);
