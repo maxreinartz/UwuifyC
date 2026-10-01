@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdint.h>
 #include <sys/time.h>
+#include <time.h>
 
 int totalWords = 0;
 
