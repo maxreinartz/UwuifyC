@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Iinclude -O2 -flto -D_POSIX_C_SOURCE=199309L
+CFLAGS = -Iinclude -O2 -flto
 LDFLAGS = -s -flto
 LIBS =
 SRCDIR = src

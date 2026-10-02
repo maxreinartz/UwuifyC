@@ -1,4 +1,3 @@
-#define _POSIX_C_SOURCE 199309L
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -258,9 +257,9 @@ char *uwuifyString(char *message) {
 }
 
 int main(int argc, char *argv[]) {
-  struct timespec start, end;
+  struct timeval start, end;
 
-  clock_gettime(CLOCK_MONOTONIC, &start);
+  gettimeofday(&start, NULL);
 
   printf("Uwuify C\n");
 
@@ -305,10 +304,10 @@ int main(int argc, char *argv[]) {
     uwuifyMessage = uwuifyString(message);
   }
 
-  clock_gettime(CLOCK_MONOTONIC, &end);
+  gettimeofday(&end, NULL);
 
   uint64_t elapsed_ms = (end.tv_sec - start.tv_sec) * 1000 +
-                        (end.tv_nsec - start.tv_nsec) / 1000000;
+                        (end.tv_usec - start.tv_usec) / 1000;
 
   int minutes = (int)(elapsed_ms / 60000);
   int seconds = (int)((elapsed_ms - minutes * 60000) / 1000);
